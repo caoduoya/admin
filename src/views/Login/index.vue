@@ -199,7 +199,8 @@ export default {
         password: sha1(ruleForm.password),
         code: ruleForm.code
       };
-      Login(responseData)
+      root.$store
+        .dispatch("login", responseData)
         .then(response => {
           console.log(response);
           root.$router.push({
@@ -207,6 +208,14 @@ export default {
           });
         })
         .catch(error => {});
+      // Login(responseData)
+      //   .then(response => {
+      //     console.log(response);
+      //     root.$router.push({
+      //       name: "Console"
+      //     });
+      //   })
+      //   .catch(error => {});
     };
     //注册
     const register = () => {

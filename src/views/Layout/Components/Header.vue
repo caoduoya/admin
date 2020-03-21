@@ -5,7 +5,8 @@
     </div>
     <div class="pull-right header-icon">
       <div class="user-info pull-left">
-        <img src="../../../assets/images/face.jpg" alt />管理员
+        <img src="../../../assets/images/face.jpg" alt />
+        {{ username }}
       </div>
       <div class="header-icon pull-left">
         <svg-icon iconClass="exit" class="exit" />
@@ -15,15 +16,19 @@
 </template>
 
 <script>
-// import { reactive, ref, onMounted } from "@vue/composition-api";
+import { computed } from "@vue/composition-api";
 export default {
   name: "layoutHeader",
   setup(props, { root }) {
+    const username = computed(() => {
+      return root.$store.state.username;
+    });
     const navMenuState = () => {
       root.$store.commit("SEL_COLLAPSE");
     };
     return {
-      navMenuState
+      navMenuState,
+      username
     };
   }
 };
