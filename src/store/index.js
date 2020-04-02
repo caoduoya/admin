@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { setToken, setUserName, getUserName } from "@/utils/app";
+import { setToken, setUserName, getUserName, removeUserName, removeToken } from "@/utils/app";
 import { Login } from "@/api/login";
 import cookie from "cookie_js";
 
@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    isCollapse: JSON.parse(sessionStorage.getItem("isCollapse")) || false,
+    isCollapse: false || JSON.parse(sessionStorage.getItem("isCollapse")),
     to_ken: '',
     username: getUserName() || ''
   },
@@ -46,6 +46,15 @@ export default new Vuex.Store({
           reject();
         });
       })
+    },
+    exit(content) {
+      return new Promise((resolve, reject) => {
+        removeToken();
+        removeUserName();
+        content.commit("SET_TOKEN", "");
+        content.commit("SET_USERNAME", "");
+        resolve();
+      });
     }
   },
   modules: {}

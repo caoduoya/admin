@@ -17,20 +17,19 @@ export default {};
 #main-wrap {
   height: 100vh;
   // position: fixed;
-  // left: 250px;
+  // left: $navMenu;
   // top: 75px;
   // right: 0;
   // bottom: 0;
-  // background-color: #fff;
   // border: 30px solid #f7f7f7;
   // border-bottom: none;
   // -webkit-box-sizing: border;
 }
 .main-content {
-  height: 100%;
   width: 100%;
-  box-sizing: border-box;
-  padding: $layoutHeader + 30 30px 0 $navMenu + 30;
+  height: 100%;
+  padding-top: $layoutHeader + 30;
+  padding-right: 30px;
   @include webkit(box-sizing, border-box);
   @include webkit(transition, all 0.3s ease 0s);
 }
@@ -41,16 +40,14 @@ export default {};
 }
 .close {
   .main-content {
-    padding-left: $layoutHeader;
+    padding-left: $navMenuMin + 30;
   }
 }
 .content {
-  height: 100%;
   width: 100%;
-  padding-top: 30px;
-  padding-left: 30px;
-  @include webkit(box-sizing, border-box);
-  box-sizing: border-box;
+  height: 100%;
+  padding: 30px 30px 0 30px;
   background-color: #fff;
+  @include webkit(box-sizing, border-box);
 }
 </style>

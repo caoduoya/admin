@@ -8,7 +8,7 @@
         <img src="../../../assets/images/face.jpg" alt />
         {{ username }}
       </div>
-      <div class="header-icon pull-left">
+      <div class="header-icon pull-left" @click="exit">
         <svg-icon iconClass="exit" class="exit" />
       </div>
     </div>
@@ -26,9 +26,20 @@ export default {
     const navMenuState = () => {
       root.$store.commit("SEL_COLLAPSE");
     };
+    //退出
+    const exit = () => {
+      root.$store.dispatch("exit").then((res)=>{
+        root.$router.push({
+          name:"/login"
+        })
+      }).catch((err)=>{
+
+      })
+    };
     return {
       navMenuState,
-      username
+      username,
+      exit
     };
   }
 };

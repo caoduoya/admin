@@ -1,3 +1,4 @@
+import { MessageBox } from "element-ui";
 /**过滤特殊字符 */
 export function stripscript(str) {
     var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！%@#￥……&*（）&;—|{ }【】‘；：”“'。，、？]")
@@ -34,3 +35,6 @@ export function validateVCode(value) {
         return true;
     }
 }
+
+
+
