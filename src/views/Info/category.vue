@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { common } from "@/api/common";
 import { global } from "@/utils/global";
 import {
   addFirstCategory,
@@ -65,10 +66,17 @@ import {
   DeleteCategory,
   EditCategory
 } from "@/api/news";
-import { reactive, ref, onMounted, computed } from "@vue/composition-api";
+import {
+  reactive,
+  ref,
+  onMounted,
+  computed,
+  watch
+} from "@vue/composition-api";
 export default {
   name: "category",
   setup(props, { root, refs }) {
+    const { getinfoCategory, categoryItem } = common();
     const { confirm } = global();
     const form = reactive({
       categoryName: "",
@@ -130,15 +138,6 @@ export default {
       submit_button_disabled.value = false;
       console.log(subit_button_type.value);
     };
-    const getCategroy = () => {
-      getCategory({})
-        .then(res => {
-          let data = res.data.data.data;
-          console.log(res.data);
-          category.item = data;
-        })
-        .catch(err => {});
-    };
     const deleteCategoryConfirm = data => {
       deleteId.value = data;
       confirm({
@@ -199,8 +198,15 @@ export default {
     };
     //挂载完成运行
     onMounted(() => {
-      getCategroy();
+      getinfoCategory();
     });
+    //监听
+    watch(
+      () => categoryItem.item,
+      value => {
+        category.item = value;
+      }
+    );
     return {
       form,
       submit,
@@ -208,7 +214,6 @@ export default {
       category_children_input,
       category_first_input,
       category,
-      getCategroy,
       submit_loading,
       submit_button_disabled,
       category_first_disabled,

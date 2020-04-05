@@ -3,14 +3,14 @@
     <el-row :gutter="14">
       <el-col :span="4">
         <div class="label-wrap category">
-          <label for>类型：</label>
+          <label for>类别：</label>
           <div class="wrap-content">
             <el-select v-model="categoryValue" placeholder="请选择" style="width:100%">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in options.category"
+                :key="item.id"
+                :label="item.category_name"
+                :value="item.id"
               ></el-option>
             </el-select>
           </div>
@@ -93,9 +93,17 @@
 </template>
 
 <script>
+import { common } from "@/api/common";
+import { getCategory } from "@/api/news";
 import { global } from "@/utils/global";
 import DialogInfo from "./dialog/info";
-import { reactive, ref, onMounted, computed } from "@vue/composition-api";
+import {
+  reactive,
+  ref,
+  onMounted,
+  computed,
+  watch
+} from "@vue/composition-api";
 export default {
   name: "infoIndex",
   components: {
@@ -104,21 +112,11 @@ export default {
   setup(props, { root }) {
     //数据
     const { confirm } = global();
+    const { getinfoCategory, categoryItem } = common();
     const dialogInfo = ref(false);
-    const options = reactive([
-      {
-        value: 1,
-        label: "国际信息"
-      },
-      {
-        value: 2,
-        label: "国内信息"
-      },
-      {
-        value: 3,
-        label: "行业信息"
-      }
-    ]);
+    const options = reactive({
+      category: []
+    });
     const searchOption = reactive([
       {
         value: 1,
@@ -173,11 +171,6 @@ export default {
       console.log(val);
     };
     const deleteItem = () => {
-      // root.confirm({
-      //   content: "确认删除当前信息吗?删除后无法恢复",
-      //   tip: "警告",
-      //   fn: confirmDelete
-      // });
       confirm({
         content: "确认删除当前信息吗?删除后无法恢复",
         tip: "警告",
@@ -185,11 +178,6 @@ export default {
       });
     };
     const deleteAll = () => {
-      // root.confirm({
-      //   content: "确认删除选中的数据吗?删除后无法恢复",
-      //   type: "success",
-      //   fn: confirmDelete
-      // });
       confirm({
         content: "确认删除选中的数据吗?删除后无法恢复",
         type: "success",
@@ -199,6 +187,24 @@ export default {
     const confirmDelete = value => {
       console.log(value);
     };
+    //监听
+    // watch(
+    //   () => categoryItem.item,
+    //   value => {
+    //     options.category = value;
+    //   }
+    // );
+    //获取分类
+    //挂载完成运行
+    onMounted(() => {
+      // getinfoCategory();
+      root.$store
+        .dispatch("GetInfoCategory")
+        .then(res => {
+          options.category = res;
+        })
+        .catch(err => {});
+    });
     return {
       options,
       categoryValue,

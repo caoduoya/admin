@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import { setToken, setUserName, getUserName, removeUserName, removeToken } from "@/utils/app";
 import { Login } from "@/api/login";
 import cookie from "cookie_js";
+import { getCategory } from "@/api/news";
 
 
 Vue.use(Vuex);
@@ -55,6 +56,16 @@ export default new Vuex.Store({
         content.commit("SET_USERNAME", "");
         resolve();
       });
+    },
+    GetInfoCategory(content, responseData) {
+      return new Promise((resolve, reject) => {
+        //接口
+        getCategory({}).then((res) => {
+          resolve(res.data.data.data);
+        }).catch((err) => {
+          reject(err);
+        });
+      })
     }
   },
   modules: {}
