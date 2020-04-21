@@ -12,10 +12,16 @@ export default new Vuex.Store({
   state: {
     isCollapse: false || JSON.parse(sessionStorage.getItem("isCollapse")),
     to_ken: '',
-    username: getUserName() || ''
+    username: getUserName() || '',
+    id: "" || sessionStorage.getItem("infoId"),
+    title: "" || sessionStorage.getItem("infoTitle"),
+    qiniuUrl: "http://example.caoyajun.cn/"
   },
   getters: {
-    isCollapse: state => state.isCollapse
+    isCollapse: state => state.isCollapse,
+    infoId: state => state.id,
+    infoTitle: state => state.title,
+    qiniuUrl: state => state.qiniuUrl
   },
   mutations: {
     SEL_COLLAPSE(state) {
@@ -28,6 +34,14 @@ export default new Vuex.Store({
     },
     SET_USERNAME(state, value) {
       state.username = value;
+    },
+    SET_ID(state, value) {
+      state.id = value;
+      sessionStorage.setItem("infoId", value);
+    },
+    SET_TITLE(state, value) {
+      state.title = value;
+      sessionStorage.setItem("infoTitle", value)
     }
   },
   actions: {//可以回调处理事情

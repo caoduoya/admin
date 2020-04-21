@@ -17,12 +17,17 @@
                     @click="editCategory({data:item,type:'category_first_edit'})"
                     round
                   >编辑</el-button>
-                  <el-button size="mini" type="success" round>添加子级</el-button>
+                  <el-button
+                    size="mini"
+                    type="success"
+                    round
+                    @click="handlerAddChilrden({data:item,type:'category_children_add'})"
+                  >添加子级</el-button>
                   <el-button size="mini" @click="deleteCategoryConfirm(item.id)" round>删除</el-button>
                 </div>
               </h4>
               <ul v-if="item.children">
-                <li v-for="(item1,index) in item.children" :key="index">
+                <li v-for="item1 in item.children" :key="item1.id">
                   {{ item1.category_name}}
                   <div class="button-group">
                     <el-button size="mini" type="danger" round>编辑</el-button>
@@ -64,7 +69,8 @@ import {
   addFirstCategory,
   getCategory,
   DeleteCategory,
-  EditCategory
+  EditCategory,
+  addChilrdenCategory
 } from "@/api/news";
 import {
   reactive,
@@ -76,7 +82,7 @@ import {
 export default {
   name: "category",
   setup(props, { root, refs }) {
-    const { getinfoCategory, categoryItem } = common();
+    const { getinfoCategory, getinfoCategoryAll, categoryItem } = common();
     const { confirm } = global();
     const form = reactive({
       categoryName: "",
@@ -129,8 +135,10 @@ export default {
       if (subit_button_type.value === "category_first_edit") {
         editFirstCategory();
       }
+      if (subit_button_type.value == "category_children_add") {
+        addChildrenCategory();
+      }
     };
-    const addFirstCategroy = () => {};
     const addFirst = params => {
       subit_button_type.value = params.type;
       category_children_input.value = false;
@@ -163,12 +171,46 @@ export default {
         })
         .catch(err => {});
     };
+    const addChildrenCategory = () => {
+      if (!form.setCategoryName) {
+        root.$message({
+          message: "子级内容不能为空",
+          type: "error"
+        });
+        return false;
+      }
+      let requestData = {
+        categoryName: form.setCategoryName,
+        parentId: category.current.id
+      };
+      addChilrdenCategory(requestData)
+        .then(res => {
+          let data = res.data;
+          root.$message({
+            message: data.message,
+            type: "success"
+          });
+          // 调用分类列表接口
+          getinfoCategoryAll();
+          // 清空子级输入框内容
+          form.setCategoryName = "";
+        })
+        .catch(err => {});
+    };
+    const handlerAddChilrden = params => {
+      subit_button_type.value = params.type;
+      category.current = params.data;
+      category_children_disabled.value = false;
+      submit_button_disabled.value = false;
+      category_first_disabled.value = true;
+      category_children_input.value = true;
+      form.categoryName = params.data.category_name;
+    };
     const editCategory = params => {
       subit_button_type.value = params.type;
       category_children_input.value = false;
       category_first_disabled.value = false;
       submit_button_disabled.value = false;
-      console.log(params.data);
       form.categoryName = params.data.category_name;
       category.current = params.data;
     };
@@ -198,7 +240,8 @@ export default {
     };
     //挂载完成运行
     onMounted(() => {
-      getinfoCategory();
+      // getinfoCategory();
+      getinfoCategoryAll();
     });
     //监听
     watch(
@@ -222,7 +265,9 @@ export default {
       deleteCategory,
       deleteId,
       editCategory,
-      editFirstCategory
+      editFirstCategory,
+      handlerAddChilrden,
+      addChildrenCategory
     };
   }
 };

@@ -3,7 +3,7 @@
     <!--对话框-->
     <el-dialog
       width="580px"
-      title="新增"
+      title="修改"
       @opened="openDialog"
       @close="close"
       :visible.sync="dialogInfoFlag"
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { AddInfo } from "@/api/news";
+import { AddInfo, GetList, EditInfo } from "@/api/news";
 import { reactive, ref, watch, isRef } from "@vue/composition-api";
 export default {
   name: "dialogInfo",
@@ -48,6 +48,10 @@ export default {
     category: {
       type: Array,
       default: () => []
+    },
+    id: {
+      type: String,
+      default: ""
     }
   },
   setup(props, { emit, root, refs }) {
@@ -70,16 +74,33 @@ export default {
     };
     const openDialog = () => {
       categoryOption.item = props.category;
+      getInfo();
+    };
+    const getInfo = () => {
+      let requestData = {
+        pageNumber: 1,
+        pageSize: 1,
+        id: props.id
+      };
+      GetList(requestData)
+        .then(res => {
+          let responseData = res.data.data.data[0];
+          form.category = responseData.categoryId;
+          form.title = responseData.title;
+          form.content = responseData.content;
+        })
+        .catch(err => {});
     };
     const resetForm = () => {
       refs.addInfoForm.resetFields();
-      // form.category = "";
-      // form.title = "";
-      // form.content = "";
+    //   form.category = "";
+    //   form.title = "";
+    //   form.content = "";
     };
     const sumbit = () => {
       let requestData = {
-        category: form.category,
+        id: props.id,
+        categoryId: form.category,
         title: form.title,
         content: form.content
       };
@@ -91,7 +112,7 @@ export default {
         return false;
       }
       sumbitLoading.value = true;
-      AddInfo(requestData)
+      EditInfo(requestData)
         .then(res => {
           let data = res.data;
           root.$message({
@@ -99,7 +120,9 @@ export default {
             type: "success"
           });
           sumbitLoading.value = false;
-          resetForm();
+          //二种刷新数据方式
+          emit("GetList");
+        //   resetForm();
         })
         .catch(err => {
           sumbitLoading.value = false;
@@ -114,7 +137,8 @@ export default {
       categoryOption,
       sumbit,
       sumbitLoading,
-      resetForm
+      resetForm,
+      getInfo
     };
   }
 };
