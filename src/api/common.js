@@ -29,7 +29,7 @@ export function common() {
 }
 
 //获取七牛云token
-export function QiniuToken(data) {
+export function loadTableData(data) {
     return instance.request({
         method: "post",
         url: "/uploadImgToken/",

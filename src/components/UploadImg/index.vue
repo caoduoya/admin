@@ -14,7 +14,7 @@
 
 <script>
 import { reactive, onMounted, watch } from "@vue/composition-api";
-import { QiniuToken } from "@/api/common";
+import { loadTableData } from "@/api/common";
 export default {
   //组件的过程
   //最终结果要做什么
@@ -65,7 +65,7 @@ export default {
         secretkey: props.config.secretkey,
         buckety: props.config.buckety
       };
-      QiniuToken(requestData)
+      loadTableData(requestData)
         .then(res => {
           data.uploadkey.token = res.data.data.token;
         })

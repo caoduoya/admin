@@ -2,7 +2,7 @@ import axios from "axios";
 import { Message } from "element-ui";
 import { getToken, getUserName } from "@/utils/app";
 //创建拦截器
-const BASEURL = process.env.NODE_ENV === "production" ? "" : "/devApi";
+const BASEURL = process.env.NODE_ENV === "production" ? process.env.VUE_APP_API : process.env.VUE_APP_API;
 const instance = axios.create({
     baseURL: BASEURL,
     timeout: 15000

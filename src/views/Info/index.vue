@@ -38,14 +38,15 @@
         <div class="label-wrap key-work">
           <label for>关键字：</label>
           <div class="wrap-content">
-            <el-select v-model="search_key" placeholder="请选择" style="width:100%">
+            <SelectVue :config="data.configOption" />
+            <!-- <el-select v-model="search_key" placeholder="请选择" style="width:100%">
               <el-option
                 v-for="item in searchOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
-            </el-select>
+            </el-select>-->
           </div>
         </div>
       </el-col>
@@ -116,6 +117,7 @@ import { getCategory, GetList, DeleteInfo } from "@/api/news";
 import { global } from "@/utils/global";
 import DialogInfo from "./dialog/info";
 import DialogInfoEdit from "./dialog/edit";
+import SelectVue from "@c/Select";
 import {
   reactive,
   ref,
@@ -127,10 +129,16 @@ export default {
   name: "infoIndex",
   components: {
     DialogInfo,
-    DialogInfoEdit
+    DialogInfoEdit,
+    SelectVue
   },
   setup(props, { root }) {
     //数据
+    const data = reactive({
+      configOption: {
+        init: ["id", "title"]
+      }
+    });
     const { confirm } = global();
     const { getinfoCategory, categoryItem } = common();
     const dialogInfo = ref(false);
@@ -309,7 +317,8 @@ export default {
       dialogInfoEdit,
       editInfo,
       infoID,
-      detailed
+      detailed,
+      data
     };
   }
 };
